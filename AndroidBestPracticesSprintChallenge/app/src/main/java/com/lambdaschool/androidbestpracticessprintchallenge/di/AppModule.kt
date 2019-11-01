@@ -11,7 +11,7 @@ import javax.inject.Singleton
 @Module
 object AppModule {
 
-    private const val BASE_URL = "http://makeup-api.herokuapp.com/api/v1/"
+    private const val BASE_URL = "https://makeup-api.herokuapp.com/api/v1/"
 
     @Singleton
     @Provides

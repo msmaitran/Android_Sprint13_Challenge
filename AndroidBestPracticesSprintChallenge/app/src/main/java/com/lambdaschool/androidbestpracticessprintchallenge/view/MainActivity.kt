@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.SearchView
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lambdaschool.androidbestpracticessprintchallenge.App
@@ -48,7 +50,7 @@ class MainActivity : AppCompatActivity() {
             override fun onQueryTextSubmit(p0: String?): Boolean {
                 progressBar.visibility = View.VISIBLE
                 p0?.let {
-                    disposable = makeupService.getMakeupBrand("maybelline")
+                    disposable = makeupService.getMakeupBrand(it)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe (
@@ -74,25 +76,28 @@ class MainActivity : AppCompatActivity() {
     inner class MakeupListAdapter(private val makeupList: ArrayList<Makeup>) :
         RecyclerView.Adapter<MakeupListAdapter.ViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-            return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.makeup_list_item, parent, false)
-            )
+            return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.makeup_list_item, parent, false))
         }
 
         override fun getItemCount() = makeupList.size
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            val makeup = makeupList[position]
-            Picasso.get().load(makeup.image_link).into(holder.image)
-            holder.name.text = makeup.name
-            holder.price.text = makeup.price
-            holder.rating.text = makeup.rating
+            val item = makeupList[position]
+            Picasso.get().load(item.image_link).into(holder.image)
+            holder.name.text = item.name
+            holder.price.text = "$${item.price}"
+            if (item.rating != null) {
+                holder.rating.text = "${item.rating}/5.0"
+            } else {
+                holder.rating.text = "No Rating"
+            }
         }
 
-        inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-            val image = view.iv_makeup
-            val name = view.tv_name
-            val price = view.tv_price
-            val rating = view.tv_rating
+        inner class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
+            val image: ImageView = view.iv_makeup
+            val name: TextView = view.tv_name
+            val price: TextView = view.tv_price
+            val rating: TextView = view.tv_rating
         }
 
     }

@@ -43,18 +43,20 @@ class MainActivity : AppCompatActivity() {
             adapter = makeupListAdapter
         }
 
-        search_view.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        search_view.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+            androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(p0: String?): Boolean {
                 progressBar.visibility = View.VISIBLE
                 p0?.let {
                     disposable = makeupService.getMakeupBrand("maybelline")
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe {makeup: List<Makeup> ->
+                        .subscribe (
+                            { makeup: List<Makeup> ->
                             progressBar.visibility = View.INVISIBLE
                             listMakeup.addAll(makeup)
-                            makeupListAdapter.notifyDataSetChanged()
-                        }
+                            makeupListAdapter.notifyDataSetChanged() },
+                            { fail -> progressBar.visibility = View.INVISIBLE })
                 }
                 return true
             }

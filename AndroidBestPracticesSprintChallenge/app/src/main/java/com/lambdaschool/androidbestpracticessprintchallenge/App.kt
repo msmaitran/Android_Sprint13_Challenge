@@ -1,6 +1,7 @@
 package com.lambdaschool.androidbestpracticessprintchallenge
 
 import android.app.Application
+import com.lambdaschool.androidbestpracticessprintchallenge.di.DaggerAppComponent
 
 class App: Application() {
 
